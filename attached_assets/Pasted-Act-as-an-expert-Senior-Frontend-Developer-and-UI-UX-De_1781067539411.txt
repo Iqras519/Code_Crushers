@@ -1,0 +1,38 @@
+Act as an expert Senior Frontend Developer and UI/UX Designer. Build a modern, production-ready, highly interactive Frontend UI for a project named "StruturaCheck" (Structural Defect Detection System). 
+
+The application must look sleek, professional, and sophisticated—resembling a high-end enterprise SaaS platform. Use a dark/light hybrid industrial theme (Deep slate grays, clean whites, neon accent colors like Cyan or Emerald Green for highlights, and a warm Amber for alert states). Use a modern sans-serif font family (like Inter or Plus Jakarta Sans) with crisp typography. Ensure smooth animations using Framer Motion (or CSS transitions), clean micro-interactions on hover, and full responsiveness.
+
+Implement the following pages and components with high design standards, including a global persistent sidebar navigation and a comprehensive user profile dropdown in the top navbar:
+
+1. LOGIN/REGISTER PAGE
+- Split-screen modern layout: Left side features a minimalist, animated graphic showcasing structural grids/mesh networks with an inspiring engineering tagline. Right side handles the authentication forms.
+- Dynamic toggle with smooth slide transitions between "Sign In" and "Create Account".
+- Input fields with floating labels, focus ring animations, validation error states, and "show/hide password" eye icons.
+- Include quick OAuth login options (Google, GitHub) styled with clean minimalist borders.
+
+2. IMAGE UPLOAD & ANALYSIS INTERFACE
+- A premium, large drag-and-drop zone featuring a dashed interactive border that glows neon when an image is hovered over it.
+- Support uploading multiple structural images (roads, walls, bridges, buildings) with real-time file preview thumbnails, file size indicators, and a clean "Remove file" cross icon.
+- Interactive upload progress bar showing simulated real-time scanning steps (e.g., "Uploading...", "Analyzing Pixel Pixels...", "Running AI Model...").
+- A side-by-side comparative layout option showing the "Original Image" next to the "AI Masked Image" where detected cracks are highlighted with interactive bounding boxes or neon colored heatmaps.
+
+3. STATISTIC DASHBOARD
+- Grid of interactive metric cards displaying critical KPIs: 
+  * "Total Images Checked" (with an upward trend sparkline graph).
+  * "Cracks/Defects Found" (with a color-coded severity breakdown: High, Medium, Low).
+  * "Average Analysis Speed" (in milliseconds).
+- An interactive, stylized Chart.js/Recharts component: A dual-axis area chart showing "Defect Detection History over time" and a breakdown pie chart showing "Defect Distribution by Type" (e.g., Bridge 40%, Road 30%, Wall 20%, Building 10%).
+- Include smooth hover effects on chart segments displaying rich tooltips.
+
+4. AI MAINTENANCE RECOMMENDATION CARD
+- A dedicated, high-priority UI block that dynamically surfaces actionable insights based on the analysis.
+- Use a Kanban-style or categorized alert system utilizing color-coded severity badges:
+  * 🔴 Immediate Action Required: Structural hazard detected. Render a bold button for "Generate Work Order".
+  * 🟡 Continuous Monitoring: Minor fissures found. Include an interactive schedule picker tool to "Set Inspection Reminder".
+  * 🟢 Safe / No Action: Nominal structural health.
+- Include an expandable "AI Reasoning" accordion section powered by a simulated markdown reader, explaining why the action was recommended, along with a "Download PDF Report" action button.
+
+GLOBAL LAYOUT & USER PROFILE
+- Sidebar: Collapsible, modern navigation menu with sleek line-art icons for Dashboard, Upload, Analytics, and Settings.
+- Top Navbar: Displays a notifications bell icon (with an active badge indicator) and a polished User Profile avatar dropdown. Clicking the avatar reveals a floating card containing user details (Name, Role: Structural Engineer), a link to "Account Settings", and a "Log Out" action.
+-

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "StruturaCheck"
+version = "1.0.0"
+id = "artifacts/struturacheck"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22811
+
+[services.development]
+run = "pnpm --filter @workspace/struturacheck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/struturacheck", "run", "build" ]
+publicDir = "artifacts/struturacheck/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22811"
+BASE_PATH = "/"
