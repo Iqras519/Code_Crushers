@@ -1,40 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/struturacheck/dist/public",
-  "devCommand": "pnpm -r --filter @workspace/struturacheck run dev",
-  "installCommand": "pnpm install",
-  "env": {
-    "NODE_ENV": "production"
-  },
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
-    {
-      "source": "/((?!api).*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
