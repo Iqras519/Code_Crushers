@@ -5,13 +5,143 @@
 
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
 import { useAuth } from "./auth";
+import { mockApi } from "./mock-api";
 
 export function configureApiClient() {
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const useMockApi = 
+    import.meta.env.VITE_USE_MOCK_API === "true" || 
+    window.location.hostname.endsWith(".github.io");
 
-  // Set base URL if provided
-  if (apiUrl) {
-    setBaseUrl(apiUrl);
+  if (useMockApi) {
+    const originalFetch = window.fetch;
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const urlStr = typeof input === "string" 
+        ? input 
+        : input instanceof URL 
+          ? input.toString() 
+          : input.url;
+
+      const url = new URL(urlStr, window.location.origin);
+      const path = url.pathname;
+      const method = (init?.method || "GET").toUpperCase();
+
+      try {
+        if (path === "/api/auth/login" && method === "POST") {
+          const body = JSON.parse(init?.body as string);
+          const res = await mockApi.login(body.email, body.password);
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/auth/register" && method === "POST") {
+          const body = JSON.parse(init?.body as string);
+          const res = await mockApi.register(body.name, body.email, body.password, body.role);
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/stats/summary" && method === "GET") {
+          const res = await mockApi.getStatsSummary();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/stats/history" && method === "GET") {
+          const res = await mockApi.getStatsHistory();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/stats/distribution" && method === "GET") {
+          const res = await mockApi.getDefectDistribution();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/analyses" && method === "GET") {
+          const res = await mockApi.listAnalyses();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/analyses" && method === "POST") {
+          const body = JSON.parse(init?.body as string);
+          const res = {
+            id: Math.floor(Math.random() * 1000),
+            name: body.name || "New Facade Analysis",
+            createdAt: new Date().toISOString(),
+            severity: "low",
+            status: "completed",
+            defectsFound: 2,
+          };
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path.startsWith("/api/analyses/") && method === "GET") {
+          const id = Number(path.split("/").pop());
+          const res = await mockApi.getAnalysis(id);
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path.startsWith("/api/analyses/") && method === "DELETE") {
+          return new Response(null, { status: 204 });
+        }
+
+        if (path === "/api/recommendations" && method === "GET") {
+          const res = await mockApi.getRecommendations();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/healthz" && method === "GET") {
+          const res = await mockApi.getHealth();
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (path === "/api/images/upload" && method === "POST") {
+          const res = { id: Math.floor(Math.random() * 1000), url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&auto=format&fit=crop" };
+          return new Response(JSON.stringify(res), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message || "Mock error" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      return originalFetch(input, init);
+    };
+  } else {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl) {
+      setBaseUrl(apiUrl);
+    }
   }
 
   // Set auth token getter
