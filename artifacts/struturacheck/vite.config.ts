@@ -7,25 +7,18 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 const isProd = process.env.NODE_ENV === "production" || process.env.CI === "true";
 
 let port = 5173;
-if (process.env.PORT) {
-  const parsedPort = Number(process.env.PORT);
-  if (!Number.isNaN(parsedPort) && parsedPort > 0) {
-    port = parsedPort;
-  } else {
-    throw new Error(`Invalid PORT value: "${process.env.PORT}"`);
+if (!isProd) {
+  if (process.env.PORT) {
+    const parsedPort = Number(process.env.PORT);
+    if (!Number.isNaN(parsedPort) && parsedPort > 0) {
+      port = parsedPort;
+    } else {
+      throw new Error(`Invalid PORT value: "${process.env.PORT}"`);
+    }
   }
-} else if (!isProd) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
 }
 
-let basePath = process.env.BASE_PATH || "/";
-if (!process.env.BASE_PATH && !isProd) {
-  throw new Error(
-    "BASE_PATH environment variable is required but was not provided.",
-  );
-}
+const basePath = process.env.BASE_PATH || "/";
 
 export default defineConfig({
   base: basePath,
