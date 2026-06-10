@@ -176,7 +176,7 @@ export default function LoginPage() {
               </div>
             </div>
             <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">
-              StruturaCheck
+              VisionBuild
             </h1>
             <p className="text-lg text-[hsl(215,20%,65%)] mb-8 leading-relaxed">
               AI-powered structural defect detection for engineers who demand precision.
@@ -210,7 +210,7 @@ export default function LoginPage() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <ShieldCheck className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-bold text-white">StruturaCheck</span>
+            <span className="font-bold text-white">VisionBuild</span>
           </div>
 
           {/* Tab Toggle */}
@@ -328,7 +328,7 @@ export default function LoginPage() {
                 transition={{ duration: 0.2 }}
               >
                 <h2 className="text-2xl font-bold text-white mb-1">Create account</h2>
-                <p className="text-sm text-[hsl(215,20%,55%)] mb-6">Join the StruturaCheck platform</p>
+                <p className="text-sm text-[hsl(215,20%,55%)] mb-6">Join the VisionBuild platform</p>
                 <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
                   <div className="space-y-1.5">
                     <Label className="text-[hsl(215,20%,70%)] text-xs font-medium uppercase tracking-wide">Full Name</Label>

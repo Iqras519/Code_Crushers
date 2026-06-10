@@ -52,7 +52,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "SC";
 
-  const pageTitle = PAGE_TITLES[location] || "StruturaCheck";
+  const pageTitle = PAGE_TITLES[location] || "VisionBuild";
 
   const handleLogout = () => {
     logout();
@@ -84,7 +84,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   className="overflow-hidden"
                 >
                   <span className="font-bold text-sm text-foreground tracking-tight whitespace-nowrap">
-                    StruturaCheck
+                    VisionBuild
                   </span>
                   <p className="text-[10px] text-muted-foreground whitespace-nowrap">Defect Detection</p>
                 </motion.div>

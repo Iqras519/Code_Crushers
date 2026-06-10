@@ -18,8 +18,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const TOKEN_KEY = "struturacheck_token";
-const USER_KEY = "struturacheck_user";
+const TOKEN_KEY = "visionbuild_token";
+const USER_KEY = "visionbuild_user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
