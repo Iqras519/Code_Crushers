@@ -17,11 +17,6 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-env:
-  NODE_ENV: production
-  VITE_API_URL: ''
-  VITE_USE_MOCK_API: 'false'
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -50,13 +45,7 @@ jobs:
         env:
           NODE_ENV: production
           BASE_PATH: /Code_Crushers/
-          VITE_API_URL: ''
-          VITE_USE_MOCK_API: 'false'
         run: pnpm -r --filter @workspace/struturacheck run build
-
-      - name: Create 404.html for SPA routing
-        run: |
-          cp artifacts/struturacheck/dist/public/index.html artifacts/struturacheck/dist/public/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
