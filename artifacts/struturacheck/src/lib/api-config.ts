@@ -8,17 +8,14 @@ import { useAuth } from "./auth";
 import { mockApi } from "./mock-api";
 
 export function configureApiClient() {
-  const useMockApi = 
-    import.meta.env.VITE_USE_MOCK_API === "true" || 
-    window.location.hostname.endsWith(".github.io");
-
+  const useMockApi = true;
   if (useMockApi) {
     const originalFetch = window.fetch;
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const urlStr = typeof input === "string" 
-        ? input 
-        : input instanceof URL 
-          ? input.toString() 
+      const urlStr = typeof input === "string"
+        ? input
+        : input instanceof URL
+          ? input.toString()
           : input.url;
 
       const url = new URL(urlStr, window.location.origin);

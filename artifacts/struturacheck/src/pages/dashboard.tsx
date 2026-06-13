@@ -126,7 +126,7 @@ export default function DashboardPage() {
   const totalAnalyses = analyses?.length || 0;
   const criticalCount = analyses?.filter((a) => a.severity === "high").length || 0;
   const safeCount = analyses?.filter((a) => a.severity === "none").length || 0;
-  
+
   const validScores = analyses?.filter((a) => a.confidenceScore !== null) || [];
   const avgConfidence = validScores.length > 0
     ? validScores.reduce((acc, curr) => acc + (curr.confidenceScore || 0), 0) / validScores.length

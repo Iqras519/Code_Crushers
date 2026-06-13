@@ -101,11 +101,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               <Link key={href} href={href}>
                 <motion.div
                   whileHover={{ x: collapsed ? 0 : 4 }}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-150 group relative ${
-                    isActive
-                      ? "bg-blue-600/10 text-blue-400 border border-blue-500/20"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 border border-transparent"
-                  }`}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-150 group relative ${isActive
+                    ? "bg-blue-600/10 text-blue-400 border border-blue-500/20"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 border border-transparent"
+                    }`}
                   data-testid={`nav-${label.toLowerCase()}`}
                 >
                   {isActive && (

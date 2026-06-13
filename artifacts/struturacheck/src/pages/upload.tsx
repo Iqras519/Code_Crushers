@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateAnalysis, useDeleteAnalysis, getListAnalysesQueryKey } from "@workspace/api-client-react";
+import { useDeleteAnalysis, getListAnalysesQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
@@ -60,7 +60,6 @@ export default function UploadPage() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const createAnalysis = useCreateAnalysis();
   const deleteAnalysis = useDeleteAnalysis();
 
   const addFiles = useCallback((newFiles: File[]) => {
@@ -134,29 +133,56 @@ export default function UploadPage() {
     await simulateProgress();
 
     const fileName = file.name;
-    createAnalysis.mutate(
-      { data: { fileName, structureType, imageData } },
-      {
-        onSuccess: (res: any) => {
-          setProgress(100);
-          setCurrentStep(STEPS.length - 1);
-          setTimeout(() => {
-            setIsAnalyzing(false);
-            setResult(res);
-            queryClient.invalidateQueries({ queryKey: getListAnalysesQueryKey() });
-          }, 500);
+    try {
+      const response = await fetch("https://backend-jukx.onrender.com/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        onError: () => {
-          setIsAnalyzing(false);
-          setProgress(0);
-          toast({ title: "Analysis failed", description: "Please try again", variant: "destructive" });
-        },
+        body: JSON.stringify({
+          imageData,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Prediction failed with status ${response.status}`);
       }
-    );
+
+      const data = await response.json();
+
+      const mappedResult: AnalysisResult = {
+        id: 0,
+        fileName,
+        structureType,
+        severity: data.severity,
+        defectCount: data.defectCount,
+        confidenceScore: data.confidenceScore,
+        analysisSpeedMs: data.analysisSpeedMs,
+        defectTypes: JSON.stringify(data.defectTypes),
+      };
+
+      setProgress(100);
+      setCurrentStep(STEPS.length - 1);
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        setResult(mappedResult);
+      }, 500);
+    } catch (err) {
+      setIsAnalyzing(false);
+      setProgress(0);
+      toast({ title: "Analysis failed", description: "Please try again", variant: "destructive" });
+    }
   };
 
   const handleDelete = () => {
     if (!result) return;
+    if (result.id === 0) {
+      setResult(null);
+      setFiles([]);
+      setProgress(0);
+      toast({ title: "Analysis cleared" });
+      return;
+    }
     deleteAnalysis.mutate(
       { id: result.id },
       {
@@ -302,7 +328,7 @@ export default function UploadPage() {
                       <span className="text-xs font-mono font-bold text-blue-400">{Math.round(progress)}%</span>
                     </div>
                     <Progress value={progress} className="h-1.5 bg-slate-800 [&>div]:bg-blue-500" />
-                    
+
                     {/* Pulsing Stepper Bullet Marks */}
                     <div className="flex items-center justify-between pt-1">
                       {STEPS.map((s, i) => {
@@ -311,14 +337,12 @@ export default function UploadPage() {
                         return (
                           <div
                             key={s}
-                            className={`flex flex-col items-center flex-1 relative ${
-                              isCurrent ? "text-blue-400 font-bold" : isPast ? "text-emerald-400" : "text-slate-600"
-                            }`}
+                            className={`flex flex-col items-center flex-1 relative ${isCurrent ? "text-blue-400 font-bold" : isPast ? "text-emerald-400" : "text-slate-600"
+                              }`}
                           >
                             <span className="text-[10px] font-mono mb-1">{i + 1}</span>
-                            <div className={`w-2 h-2 rounded-full border ${
-                              isCurrent ? "bg-blue-500 border-blue-400 animate-pulse-subtle" : isPast ? "bg-emerald-500 border-emerald-400" : "bg-transparent border-slate-700"
-                            }`} />
+                            <div className={`w-2 h-2 rounded-full border ${isCurrent ? "bg-blue-500 border-blue-400 animate-pulse-subtle" : isPast ? "bg-emerald-500 border-emerald-400" : "bg-transparent border-slate-700"
+                              }`} />
                           </div>
                         );
                       })}
