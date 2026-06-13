@@ -75,3 +75,4 @@ Code_Crushers/
 - [Architecture Overview](DEPLOYMENT.md)
 - [GitHub Pages Setup](GITHUB_PAGES_QUICKSTART.md)
 - [Full Deployment Guides](DEPLOYMENT.md)
+new
