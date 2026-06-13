@@ -365,6 +365,9 @@ components:
           type: string
         notes:
           type: string
+        imageData:
+          type: string
+          description: "Base64 encoded image data for ML prediction"
 
     StatsSummary:
       type: object

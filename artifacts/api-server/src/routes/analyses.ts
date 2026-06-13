@@ -23,9 +23,9 @@ function simulateAnalysis(structureType: string, fileName: string) {
   const defectTypes =
     severity !== "none"
       ? JSON.stringify(
-          (DEFECT_TYPES_BY_STRUCTURE[structureType] || DEFECT_TYPES_BY_STRUCTURE.building)
-            .slice(0, defectCount > 3 ? 3 : defectCount)
-        )
+        (DEFECT_TYPES_BY_STRUCTURE[structureType] || DEFECT_TYPES_BY_STRUCTURE.building)
+          .slice(0, defectCount > 3 ? 3 : defectCount)
+      )
       : JSON.stringify([]);
   return { severity, defectCount, confidenceScore, analysisSpeedMs, defectTypes };
 }
@@ -35,13 +35,12 @@ function generateReasoningMarkdown(severity: string, structureType: string, defe
     return `## Analysis Summary\n\nNo structural defects detected in this ${structureType}.\n\n### Confidence\nAI model confidence: >95%\n\n### Methodology\nPixel-level analysis using convolutional neural networks trained on 50,000+ structural images.`;
   }
   const typeList = defectTypes.map((t) => `- **${t.replace(/_/g, " ")}**`).join("\n");
-  return `## Analysis Summary\n\nDetected defects in ${structureType} structure:\n\n${typeList}\n\n### Severity Assessment\nSeverity classified as **${severity}** based on crack width, propagation pattern, and structural load-bearing impact.\n\n### Confidence\nAI model confidence: ${Math.floor(75 + Math.random() * 20)}%\n\n### Recommended Action\n${
-    severity === "high"
-      ? "Immediate structural assessment required. Restrict access if necessary."
-      : severity === "medium"
-        ? "Schedule inspection within 30 days. Monitor for propagation."
-        : "Monitor quarterly. Document for baseline comparison."
-  }`;
+  return `## Analysis Summary\n\nDetected defects in ${structureType} structure:\n\n${typeList}\n\n### Severity Assessment\nSeverity classified as **${severity}** based on crack width, propagation pattern, and structural load-bearing impact.\n\n### Confidence\nAI model confidence: ${Math.floor(75 + Math.random() * 20)}%\n\n### Recommended Action\n${severity === "high"
+    ? "Immediate structural assessment required. Restrict access if necessary."
+    : severity === "medium"
+      ? "Schedule inspection within 30 days. Monitor for propagation."
+      : "Monitor quarterly. Document for baseline comparison."
+    }`;
 }
 
 router.get("/analyses", async (req, res): Promise<void> => {
@@ -53,7 +52,7 @@ router.get("/analyses", async (req, res): Promise<void> => {
 });
 
 router.post("/analyses", async (req, res): Promise<void> => {
-  const { fileName, structureType, notes } = req.body;
+  const { fileName, structureType, notes, imageData } = req.body;
   if (!fileName || !structureType) {
     res.status(400).json({ error: "fileName and structureType are required" });
     return;
@@ -63,24 +62,48 @@ router.post("/analyses", async (req, res): Promise<void> => {
     return;
   }
 
-  const sim = simulateAnalysis(structureType, fileName);
-  const defectTypesArr: string[] = JSON.parse(sim.defectTypes || "[]");
-
-  const [analysis] = await db
-    .insert(analysesTable)
-    .values({
+  const response = await fetch("http://127.0.0.1:8000/predict", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       fileName,
       structureType,
-      severity: sim.severity,
-      status: "completed",
-      defectCount: sim.defectCount,
-      confidenceScore: sim.confidenceScore,
-      analysisSpeedMs: sim.analysisSpeedMs,
-      defectTypes: sim.defectTypes,
-      notes: notes || null,
-    })
-    .returning();
+      notes,
+      imageData: imageData || null,
+    }),
+  });
 
+  const sim = (await response.json()) as any;
+
+  sim.defectTypes = JSON.stringify(sim.defectTypes || []);
+  console.log(sim);
+  const defectTypesArr: string[] = JSON.parse(sim.defectTypes || "[]");
+
+  let analysis;
+  try {
+    const [inserted] = await db
+      .insert(analysesTable)
+      .values({
+        fileName,
+        structureType,
+        severity: sim.severity,
+        status: "completed",
+        defectCount: sim.defectCount,
+        confidenceScore: sim.confidenceScore,
+        analysisSpeedMs: sim.analysisSpeedMs,
+        defectTypes: sim.defectTypes,
+        notes: notes || null,
+      })
+      .returning();
+    analysis = inserted;
+  } catch (error: any) {
+    console.error(error);
+    console.error(error.cause);
+    console.error(error.detail);
+    throw error;
+  }
   if (sim.severity !== "none" && defectTypesArr.length > 0) {
     const recSeverity = sim.severity === "high" ? "critical" : sim.severity === "medium" ? "warning" : "safe";
     const recTitle =

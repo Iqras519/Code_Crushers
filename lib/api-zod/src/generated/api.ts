@@ -75,7 +75,8 @@ export const ListAnalysesResponse = zod.array(ListAnalysesResponseItem)
 export const CreateAnalysisBody = zod.object({
   "fileName": zod.string(),
   "structureType": zod.string(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "imageData": zod.string().optional().describe('Base64 encoded image data for ML prediction')
 })
 
 

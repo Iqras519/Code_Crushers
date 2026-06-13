@@ -248,6 +248,7 @@ export default function LoginPage() {
                     <Input
                       id="email"
                       type="email"
+                      autoComplete="username"
                       placeholder="engineer@company.com"
                       className="bg-[hsl(220,15%,15%)] border-[hsl(220,15%,25%)] text-white placeholder:text-[hsl(215,20%,40%)] focus:border-primary focus:ring-1 focus:ring-primary"
                       data-testid="input-email"
@@ -263,6 +264,7 @@ export default function LoginPage() {
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
                         placeholder="••••••••"
                         className="bg-[hsl(220,15%,15%)] border-[hsl(220,15%,25%)] text-white placeholder:text-[hsl(215,20%,40%)] focus:border-primary focus:ring-1 focus:ring-primary pr-10"
                         data-testid="input-password"
@@ -346,6 +348,7 @@ export default function LoginPage() {
                     <Label className="text-[hsl(215,20%,70%)] text-xs font-medium uppercase tracking-wide">Email</Label>
                     <Input
                       type="email"
+                      autoComplete="username"
                       placeholder="engineer@company.com"
                       className="bg-[hsl(220,15%,15%)] border-[hsl(220,15%,25%)] text-white placeholder:text-[hsl(215,20%,40%)] focus:border-primary"
                       data-testid="input-register-email"
@@ -369,6 +372,7 @@ export default function LoginPage() {
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
                         placeholder="Min. 6 characters"
                         className="bg-[hsl(220,15%,15%)] border-[hsl(220,15%,25%)] text-white placeholder:text-[hsl(215,20%,40%)] focus:border-primary pr-10"
                         data-testid="input-register-password"

@@ -52,3 +52,22 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Local databases
+db.json
+*.backup.ts
+
+# Python Virtual Environments & Cache
+backend/.venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Test Images
+crack_test.jpg
+non_crack_test.jpg
+
+

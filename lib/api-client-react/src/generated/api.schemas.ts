@@ -68,6 +68,8 @@ export interface AnalysisInput {
   fileName: string;
   structureType: string;
   notes?: string;
+  /** Base64 encoded image data for ML prediction */
+  imageData?: string;
 }
 
 export interface StatsSummary {
